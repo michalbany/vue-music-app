@@ -7,7 +7,8 @@ import {
   email,
   min_value as minVal,
   max_value as maxVal,
-  confirmed
+  confirmed,
+  not_one_of as excluded
 } from '@vee-validate/rules'
 
 export default {
@@ -24,5 +25,6 @@ export default {
     defineRule('minVal', minVal) // min num value
     defineRule('maxVal', maxVal) // max num value
     defineRule('confirmed', confirmed) // two fields matches
+    defineRule('excluded', excluded) // not allowed choice
   }
 }

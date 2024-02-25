@@ -8,16 +8,14 @@ const modalStore = useModalStore()
 const tab = ref('login')
 
 const schema = {
-    name: "required|min:3|max:100|alphaSpaces",
-    email: "required|min:3|max:100|email",
-    age: "required|minVal:18|maxVal:100",
-    password: "required|min:3|max:100",
-    confirm_password: "confirmed:@password",
-    country: "",
-    tos: "",
+  name: 'required|min:3|max:100|alphaSpaces',
+  email: 'required|min:3|max:100|email',
+  age: 'required|minVal:18|maxVal:100',
+  password: 'required|min:3|max:100',
+  confirm_password: 'confirmed:@password',
+  country: 'required|excluded:Antarctica',
+  tos: 'required'
 }
-
-
 </script>
 
 <template>
@@ -103,8 +101,7 @@ const schema = {
             </button>
           </form>
           <!-- Registration Form -->
-          <VeeForm v-show="tab === 'register'"
-            :validation-schema="schema">
+          <VeeForm v-show="tab === 'register'" :validation-schema="schema">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
@@ -114,7 +111,7 @@ const schema = {
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Name"
               />
-              <ErrorMessage class="text-red-600" name="name"/>
+              <ErrorMessage class="text-red-600" name="name" />
             </div>
             <!-- Email -->
             <div class="mb-3">
@@ -125,7 +122,7 @@ const schema = {
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Email"
               />
-              <ErrorMessage class="text-red-600" name="email"/>
+              <ErrorMessage class="text-red-600" name="email" />
             </div>
             <!-- Age -->
             <div class="mb-3">
@@ -135,7 +132,7 @@ const schema = {
                 type="number"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
               />
-              <ErrorMessage class="text-red-600" name="age"/>
+              <ErrorMessage class="text-red-600" name="age" />
             </div>
             <!-- Password -->
             <div class="mb-3">
@@ -146,7 +143,7 @@ const schema = {
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Password"
               />
-              <ErrorMessage class="text-red-600" name="password"/>
+              <ErrorMessage class="text-red-600" name="password" />
             </div>
             <!-- Confirm Password -->
             <div class="mb-3">
@@ -157,24 +154,34 @@ const schema = {
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Confirm Password"
               />
-              <ErrorMessage class="text-red-600" name="confirm_password"/>
+              <ErrorMessage class="text-red-600" name="confirm_password" />
             </div>
             <!-- Country -->
             <div class="mb-3">
               <label class="inline-block mb-2">Country</label>
-              <select
+              <VeeField
+                as="select"
+                name="country"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
               >
                 <option value="USA">USA</option>
                 <option value="Mexico">Mexico</option>
                 <option value="Germany">Germany</option>
-              </select>
+                <option value="Antarctica">Antarctica</option>
+              </VeeField>
+              <ErrorMessage class="text-red-600" name="country" />
             </div>
             <!-- TOS -->
             <div class="mb-3 pl-6">
-              <input type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded" />
+              <VeeField
+                name="tos"
+                value="1"
+                type="checkbox"
+                class="w-4 h-4 float-left -ml-6 mt-1 rounded"
+              />
               <label class="inline-block">Accept terms of service</label>
             </div>
+            <ErrorMessage class="text-red-600" name="tos" />
             <button
               type="submit"
               class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700"
