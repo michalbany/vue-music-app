@@ -1,6 +1,5 @@
 <script setup>
 import { useModalStore } from '@/stores/modal'
-import { errorMessages } from '@vue/compiler-core';
 import { ref } from 'vue'
 
 // Použití Pinia store
@@ -10,10 +9,10 @@ const tab = ref('login')
 
 const schema = {
     name: "required|min:3|max:100|alphaSpaces",
-    email: "",
-    age: "",
-    password: "",
-    confirm_password: "",
+    email: "required|min:3|max:100|email",
+    age: "required|minVal:18|maxVal:100",
+    password: "required|min:3|max:100",
+    confirm_password: "confirmed:@password",
     country: "",
     tos: "",
 }
@@ -120,37 +119,45 @@ const schema = {
             <!-- Email -->
             <div class="mb-3">
               <label class="inline-block mb-2">Email</label>
-              <input
+              <VeeField
+                name="email"
                 type="email"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Email"
               />
+              <ErrorMessage class="text-red-600" name="email"/>
             </div>
             <!-- Age -->
             <div class="mb-3">
               <label class="inline-block mb-2">Age</label>
-              <input
+              <VeeField
+                name="age"
                 type="number"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
               />
+              <ErrorMessage class="text-red-600" name="age"/>
             </div>
             <!-- Password -->
             <div class="mb-3">
               <label class="inline-block mb-2">Password</label>
-              <input
+              <VeeField
+                name="password"
                 type="password"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Password"
               />
+              <ErrorMessage class="text-red-600" name="password"/>
             </div>
             <!-- Confirm Password -->
             <div class="mb-3">
               <label class="inline-block mb-2">Confirm Password</label>
-              <input
+              <VeeField
+                name="confirm_password"
                 type="password"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Confirm Password"
               />
+              <ErrorMessage class="text-red-600" name="confirm_password"/>
             </div>
             <!-- Country -->
             <div class="mb-3">
