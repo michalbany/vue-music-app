@@ -93,11 +93,12 @@ const tab = ref('login')
             </button>
           </form>
           <!-- Registration Form -->
-          <form v-show="tab === 'register'">
+          <VeeForm v-show="tab === 'register'">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
-              <input
+              <VeeField
+                name="name"
                 type="text"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Name"
@@ -160,7 +161,7 @@ const tab = ref('login')
             >
               Submit
             </button>
-          </form>
+          </VeeForm>
         </div>
       </div>
     </div>
