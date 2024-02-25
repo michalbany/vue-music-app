@@ -9,7 +9,7 @@ const modalStore = useModalStore()
 const tab = ref('login')
 
 const schema = {
-    name: "required",
+    name: "required|min:3|max:100|alphaSpaces",
     email: "",
     age: "",
     password: "",
