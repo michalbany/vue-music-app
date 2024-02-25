@@ -1,11 +1,22 @@
 <script setup>
 import { useModalStore } from '@/stores/modal'
+import { errorMessages } from '@vue/compiler-core';
 import { ref } from 'vue'
 
 // Použití Pinia store
 const modalStore = useModalStore()
 
 const tab = ref('login')
+
+const schema = {
+    name: "required",
+    email: "",
+    age: "",
+    password: "",
+    confirm_password: "",
+    country: "",
+    tos: "",
+}
 
 
 </script>
@@ -93,7 +104,8 @@ const tab = ref('login')
             </button>
           </form>
           <!-- Registration Form -->
-          <VeeForm v-show="tab === 'register'">
+          <VeeForm v-show="tab === 'register'"
+            :validation-schema="schema">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
@@ -103,6 +115,7 @@ const tab = ref('login')
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Name"
               />
+              <ErrorMessage class="text-red-600" name="name"/>
             </div>
             <!-- Email -->
             <div class="mb-3">
