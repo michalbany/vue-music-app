@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import firebase from '@/includes/firebase'
+import {auth} from '@/includes/firebase'
 
 const schema = {
   name: 'required|min:3|max:100|alphaSpaces',
@@ -29,8 +29,7 @@ async function register(values) {
 
   let userCred = ref(null)
   try {
-    userCred.value = await firebase
-      .auth()
+    userCred.value = await auth
       .createUserWithEmailAndPassword(values.email, values.password)
   } catch (error) {
     reg_in_submission.value = false
