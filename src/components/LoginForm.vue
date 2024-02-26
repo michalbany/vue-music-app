@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
 
 const loginSchema = {
   email: 'required|email',
@@ -11,11 +14,20 @@ let login_show_alert = ref(false)
 let login_alert_variant = ref('')
 let login_alert_msg = ref('')
 
-function login(values) {
+async function login(values) {
   login_show_alert.value = true
   login_in_submission.value = true
   login_alert_variant.value = 'bg-blue-500'
   login_alert_msg.value = 'Please wait! We are login you in.'
+
+  try {
+    await userStore.authenticate(values)
+  } catch (error) {
+    login_in_submission.value = false
+    login_alert_variant.value = 'bg-red-500'
+    login_alert_msg.value = 'Invalid login details.'
+    return
+  }
 
   login_alert_variant.value = 'bg-green-500'
   login_alert_msg.value = 'Success! You are now logged in.'
@@ -23,7 +35,7 @@ function login(values) {
 </script>
 
 <template>
-    <div
+  <div
     class="text-white text-center font-bold p-4 rounded mb-4"
     v-if="login_show_alert"
     :class="login_alert_variant"
