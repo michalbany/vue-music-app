@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-
+import firebase from '@/includes/firebase'
 
 const schema = {
   name: 'required|min:3|max:100|alphaSpaces',
@@ -21,15 +21,27 @@ let reg_show_alert = ref(false)
 let reg_alert_variant = ref('')
 let reg_alert_msg = ref('')
 
-
-function register(values) {
+async function register(values) {
   reg_show_alert.value = true
   reg_in_submission.value = true
   reg_alert_variant.value = 'bg-blue-500'
   reg_alert_msg.value = 'Please wait! Your account is being created.'
 
+  let userCred = ref(null)
+  try {
+    userCred.value = await firebase
+      .auth()
+      .createUserWithEmailAndPassword(values.email, values.password)
+  } catch (error) {
+    reg_in_submission.value = false
+    reg_alert_variant.value = 'bg-red-500'
+    reg_alert_msg.value = 'An unexpected error occured. Please try again later.'
+    return
+  }
+
   reg_alert_variant.value = 'bg-green-500'
   reg_alert_msg.value = 'Success! Your account has been created.'
+  console.log(userCred)
 }
 </script>
 
@@ -41,11 +53,7 @@ function register(values) {
   >
     {{ reg_alert_msg }}
   </div>
-  <VeeForm
-    :validation-schema="schema"
-    @submit="register"
-    :initial-values="userData"
-  >
+  <VeeForm :validation-schema="schema" @submit="register" :initial-values="userData">
     <!-- Name -->
     <div class="mb-3">
       <label class="inline-block mb-2">Name</label>
