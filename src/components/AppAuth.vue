@@ -21,8 +21,19 @@ const userData = {
   country: 'USA', 
 }
 
+let reg_in_submission = ref(false)
+let reg_show_alert = ref(false)
+let reg_alert_variant = ref("")
+let reg_alert_msg = ref("")
+
 function register(values) {
-  console.log(values)
+  reg_show_alert.value = true
+  reg_in_submission.value = true
+  reg_alert_variant.value = "bg-blue-500"
+  reg_alert_msg.value = "Please wait! Your account is being created."
+
+  reg_alert_variant.value = "bg-green-500"
+  reg_alert_msg.value = "Success! Your account has been created."
 }
 </script>
 
@@ -108,6 +119,9 @@ function register(values) {
               Submit
             </button>
           </form>
+          <div class="text-white text-center font-bold p-4 rounded mb-4"
+            v-if="reg_show_alert"
+            :class="reg_alert_variant">{{ reg_alert_msg }}</div>
           <!-- Registration Form -->
           <VeeForm v-show="tab === 'register'" :validation-schema="schema" @submit="register" :initial-values="userData">
             <!-- Name -->
@@ -196,7 +210,8 @@ function register(values) {
             <ErrorMessage class="text-red-600" name="tos" />
             <button
               type="submit"
-              class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700"
+              class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700 disabled:bg-purple-300"
+              :disabled="reg_in_submission"
             >
               Submit
             </button>
