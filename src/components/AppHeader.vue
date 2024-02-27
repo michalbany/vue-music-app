@@ -1,8 +1,10 @@
 <script setup>
 import { useModalStore } from '@/stores/modal'
+import { useUserStore } from '@/stores/user'
 
 // Použití Pinia store
 const modalStore = useModalStore()
+const userStore = useUserStore()
 
 // Metoda pro přepínání stavu modalu
 function toggleAuthModal() {
@@ -21,14 +23,19 @@ function toggleAuthModal() {
         <!-- Primary Navigation -->
         <ul class="flex flex-row mt-1">
           <!-- Navigation Links -->
-          <li>
+          <li v-if="!userStore.userLoggedIn">
             <a class="px-2 text-white" href="#" @click.prevent="toggleAuthModal"
               >Login / Register</a
             >
           </li>
-          <li>
-            <a class="px-2 text-white" href="#">Manage</a>
-          </li>
+          <template v-else>
+            <li>
+              <a class="px-2 text-white" href="#">Manage</a>
+            </li>
+            <li>
+              <a class="px-2 text-white" href="#" @click.prevent="userStore.signout">logout</a>
+            </li>
+          </template>
         </ul>
       </div>
     </nav>
