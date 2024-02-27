@@ -1,14 +1,26 @@
 <script setup>
 import { useModalStore } from '@/stores/modal'
 import { useUserStore } from '@/stores/user'
+import { useRoute, useRouter } from 'vue-router';
 
 // Použití Pinia store
 const modalStore = useModalStore()
 const userStore = useUserStore()
 
+const route = useRoute()
+const router = useRouter()
+
 // Metoda pro přepínání stavu modalu
 function toggleAuthModal() {
   modalStore.isOpen = !modalStore.isOpen
+}
+
+function signout(){
+  userStore.signout()
+
+  if (route.name === "manage") {
+    router.push({ name: "home" })
+  }
 }
 </script>
 
@@ -41,7 +53,7 @@ function toggleAuthModal() {
               <RouterLink class="px-2 text-white" :to="{ name: 'manage' }">Manage</RouterLink>
             </li>
             <li>
-              <a class="px-2 text-white" href="#" @click.prevent="userStore.signout">logout</a>
+              <a class="px-2 text-white" href="#" @click.prevent="signout">logout</a>
             </li>
           </template>
         </ul>
