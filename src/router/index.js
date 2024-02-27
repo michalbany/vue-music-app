@@ -24,13 +24,8 @@ const router = createRouter({
       // alias: '/manage',
       name: 'manage',
       component: () => import('@/views/ManageView.vue'),
-      beforeEnter: (to, from, next) => {
-        const userStore = useUserStore()
-        if (userStore.userLoggedIn) {
-          next()
-        } else {
-          next({ name: 'home' })
-        }
+      meta: {
+        requiresAuth: true
       }
     },
     {
@@ -47,7 +42,17 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
+  if (!to.meta.requiresAuth) {
+    next()
+    return
+  }
+
+  const userStore = useUserStore()
+  if (userStore.userLoggedIn) {
+    next()
+  } else {
+    next({ name: 'home' })
+  }
 })
 
 export default router

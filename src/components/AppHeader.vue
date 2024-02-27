@@ -18,7 +18,7 @@ function toggleAuthModal() {
 function signout(){
   userStore.signout()
 
-  if (route.name === "manage") {
+  if (route.meta.requiresAuth) {
     router.push({ name: "home" })
   }
 }
