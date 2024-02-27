@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 import HomeView from '@/views/HomeView.vue'
 import Error404 from '@/views/Error404.vue'
 
@@ -20,8 +21,17 @@ const router = createRouter({
     },
     {
       path: '/manage-music',
+      // alias: '/manage',
       name: 'manage',
-      component: () => import('@/views/ManageView.vue')
+      component: () => import('@/views/ManageView.vue'),
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore()
+        if (userStore.userLoggedIn) {
+          next()
+        } else {
+          next({ name: 'home' })
+        }
+      }
     },
     {
       path: '/manage',
@@ -34,6 +44,10 @@ const router = createRouter({
     }
   ],
   linkExactActiveClass: 'text-yellow-500'
+})
+
+router.beforeEach((to, from, next) => {
+  next()
 })
 
 export default router
