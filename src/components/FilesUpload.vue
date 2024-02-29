@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { storage } from '@/includes/firebase'
 
 const is_dragover = ref(false)
 
@@ -11,8 +12,15 @@ function upload($event) {
         if (file.type !== 'audio/mpeg') {
             return
         }
+
+        const storageRef = storage.ref()
+        const songsRef = storageRef.child(`songs/${file.name}`)
+
+        songsRef.put(file)
+
+
     })
-    console.log(files)
+
 }
 
 </script>
