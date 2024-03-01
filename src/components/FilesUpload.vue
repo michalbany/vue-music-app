@@ -1,16 +1,22 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 import { storage, auth, songsCollection } from '@/includes/firebase'
 
 const is_dragover = ref(false)
 
 const uploads = ref([])
 
+// Zastaveni nahrávaní po opuštění stránky
+onBeforeUnmount(() => {
+  uploads.value.forEach((upload) => {
+    upload.task.cancel()
+  })
+})
+
 function upload($event) {
   is_dragover.value = false
-  
-  const files = $event.dataTransfer ? [...$event.dataTransfer.files] : [...$event.target.files]
 
+  const files = $event.dataTransfer ? [...$event.dataTransfer.files] : [...$event.target.files]
 
   files.forEach((file) => {
     if (file.type !== 'audio/mpeg') {
@@ -50,7 +56,7 @@ function upload($event) {
           original_name: task.snapshot.ref.name,
           modified_name: task.snapshot.ref.name,
           genre: '',
-          comment_count: 0,
+          comment_count: 0
         }
 
         song.url = await task.snapshot.ref.getDownloadURL()
@@ -86,7 +92,7 @@ function upload($event) {
       >
         <h5>Drop your files here</h5>
       </div>
-      <input type="file" multiple @change="upload($event)" class=""/>
+      <input type="file" multiple @change="upload($event)" class="" />
       <hr class="my-6" />
       <!-- Progess Bars -->
       <div class="mb-4" v-for="upload in uploads" :key="upload.name">
