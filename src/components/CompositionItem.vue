@@ -4,6 +4,11 @@ import { ref } from 'vue'
 
 const showForm = ref(false)
 
+const in_submission = ref(false)
+const show_alert = ref(false)
+const alert_variant = ref('bg-blue-500')
+const alert_message = ref('')
+
 const props = defineProps({
   song: {
     type: Object,
@@ -19,8 +24,6 @@ const songSchema = {
 function edit() {
   console.log('song Edited')
 }
-
-
 </script>
 <template>
   <div class="border border-gray-200 p-3 mb-4 rounded">
@@ -37,6 +40,13 @@ function edit() {
       </button>
     </div>
     <div v-show="showForm">
+      <div
+        class="text-white text-center font-bold p-4 mb-4 rounded"
+        :class="alert_variant"
+        v-show="show_alert"
+      >
+        {{ alert_message }}
+      </div>
       <VeeForm :validation-schema="songSchema" :initial-values="song" @submit="edit">
         <div class="mb-3">
           <label class="inline-block mb-2">Song Title</label>
