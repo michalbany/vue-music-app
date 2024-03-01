@@ -2,13 +2,13 @@
 import CompositionItem from '@/components/CompositionItem.vue'
 import FilesUpload from '@/components/FilesUpload.vue'
 import { songsCollection, auth } from '@/includes/firebase'
-import { ref, onMounted } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const songs = ref([])
 
 // We would probably change this to computed (very meybe)
 // Download songs from firebase
-onMounted(async () => {
+watchEffect(async () => {
   const snapshot = await songsCollection.where('uid', '==', auth.currentUser.uid).get()
   snapshot.forEach((document) => {
     const song = {
@@ -19,6 +19,8 @@ onMounted(async () => {
     songs.value.push(song)
   })
 })
+
+
 </script>
 
 <template>

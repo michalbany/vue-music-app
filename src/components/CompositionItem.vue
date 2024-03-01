@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue';
+import { ErrorMessage } from 'vee-validate'
+import { ref } from 'vue'
 
 const showForm = ref(false)
 
@@ -9,6 +10,17 @@ const props = defineProps({
     required: true
   }
 })
+
+const songSchema = {
+  modified_name: 'required',
+  genre: 'alphaSpaces'
+}
+
+function edit() {
+  console.log('song Edited')
+}
+
+
 </script>
 <template>
   <div class="border border-gray-200 p-3 mb-4 rounded">
@@ -17,32 +29,45 @@ const props = defineProps({
       <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right">
         <i class="fa fa-times"></i>
       </button>
-      <button 
-     @click.prevent="showForm = !showForm" class="ml-1 py-1 px-2 text-sm rounded text-white bg-blue-600 float-right">
+      <button
+        @click.prevent="showForm = !showForm"
+        class="ml-1 py-1 px-2 text-sm rounded text-white bg-blue-600 float-right"
+      >
         <i class="fa fa-pencil-alt"></i>
       </button>
     </div>
     <div v-show="showForm">
-      <form>
+      <VeeForm :validation-schema="songSchema" :initial-values="song" @submit="edit">
         <div class="mb-3">
           <label class="inline-block mb-2">Song Title</label>
-          <input
+          <VeeField
+            name="modified_name"
             type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Song Title"
           />
+          <ErrorMessage class="text-red-600" name="modified_name" />
         </div>
         <div class="mb-3">
           <label class="inline-block mb-2">Genre</label>
-          <input
+          <VeeField
+            name="genre"
             type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Genre"
+            :value="song.genre"
           />
+          <ErrorMessage class="text-red-600" name="genre" />
         </div>
         <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">Submit</button>
-        <button type="button" class="py-1.5 px-3 rounded text-white bg-gray-600">Go Back</button>
-      </form>
+        <button
+          type="button"
+          @click.prevent="showForm = false"
+          class="py-1.5 px-3 rounded text-white bg-gray-600"
+        >
+          Go Back
+        </button>
+      </VeeForm>
     </div>
   </div>
 </template>
