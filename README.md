@@ -55,3 +55,4 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+>start developing on a new mac
