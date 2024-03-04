@@ -3,8 +3,10 @@ import CompositionItem from '@/components/CompositionItem.vue'
 import FilesUpload from '@/components/FilesUpload.vue'
 import { songsCollection, auth } from '@/includes/firebase'
 import { ref, watchEffect } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const songs = ref([])
+const unsavedFlag = ref(false)
 
 // We would probably change this to computed (very meybe)
 // Download songs from firebase
@@ -29,6 +31,19 @@ function addSong(document) {
   }
   songs.value.push(song)
 }
+
+function updateUnsavedFlag(value) {
+  unsavedFlag.value = value
+}
+
+onBeforeRouteLeave((from, to, next) => {
+  if (!unsavedFlag.value) {
+    next()
+  } else {
+    const leave = confirm('You have unsaved changes. Are you sure you want to leave?')
+    next(leave)
+  }
+})
 </script>
 
 <template>
@@ -52,6 +67,7 @@ function addSong(document) {
               :updateSong="updateSong"
               :index="i"
               :removeSong="removeSong"
+              :updateUnsavedFlag="updateUnsavedFlag"
             />
           </div>
         </div>

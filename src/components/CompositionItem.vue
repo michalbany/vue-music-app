@@ -26,6 +26,9 @@ const props = defineProps({
   removeSong: {
     type: Function,
     required: true
+  },
+  updateUnsavedFlag: {
+    type: Function
   }
 })
 
@@ -50,6 +53,7 @@ async function edit(values) {
   }
 
   props.updateSong(props.index, values)
+  props.updateUnsavedFlag(false)
 
   in_submission.value = false
   alert_variant.value = 'bg-green-500'
@@ -101,6 +105,7 @@ async function deleteSong() {
             type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Song Title"
+            @input="updateUnsavedFlag(true)"
           />
           <ErrorMessage class="text-red-600" name="modified_name" />
         </div>
@@ -112,6 +117,7 @@ async function deleteSong() {
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Genre"
             :value="song.genre"
+            @input="updateUnsavedFlag(true)"
           />
           <ErrorMessage class="text-red-600" name="genre" />
         </div>
