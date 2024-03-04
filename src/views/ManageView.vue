@@ -24,6 +24,10 @@ function updateSong(i, values) {
   songs.value[i].modified_name = values.modified_name
   songs.value[i].genre = values.genre
 }
+
+function removeSong(i) {
+  songs.value.splice(i, 1)
+}
 </script>
 
 <template>
@@ -46,6 +50,7 @@ function updateSong(i, values) {
               :key="song.docID"
               :updateSong="updateSong"
               :index="i"
+              :removeSong="removeSong"
             />
           </div>
         </div>

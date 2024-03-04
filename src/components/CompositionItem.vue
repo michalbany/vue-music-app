@@ -1,7 +1,7 @@
 <script setup>
 import { ErrorMessage } from 'vee-validate'
 import { ref } from 'vue'
-import { songsCollection } from '@/includes/firebase'
+import { songsCollection, storage } from '@/includes/firebase'
 
 const showForm = ref(false)
 
@@ -21,6 +21,10 @@ const props = defineProps({
   },
   index: {
     type: Number,
+    required: true
+  },
+  removeSong: {
+    type: Function,
     required: true
   }
 })
@@ -51,12 +55,26 @@ async function edit(values) {
   alert_variant.value = 'bg-green-500'
   alert_message.value = 'Success!'
 }
+
+async function deleteSong() {
+  const storageRef = storage.ref()
+  const songRef = storageRef.child(`songs/${props.song.original_name}`)
+
+  await songRef.delete()
+
+  await songsCollection.doc(props.song.docID).delete()
+
+  props.removeSong(props.index)
+}
 </script>
 <template>
   <div class="border border-gray-200 p-3 mb-4 rounded">
     <div v-show="!showForm">
       <h4 class="inline-block text-2xl truncate max-w-[70%] font-bold">{{ song.modified_name }}</h4>
-      <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right">
+      <button
+        class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right"
+        @click.prevent="deleteSong"
+      >
         <i class="fa fa-times"></i>
       </button>
       <button
