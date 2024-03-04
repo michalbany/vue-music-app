@@ -1,6 +1,7 @@
 <script setup>
 import { ErrorMessage } from 'vee-validate'
 import { ref } from 'vue'
+import { songsCollection } from '@/includes/firebase'
 
 const showForm = ref(false)
 
@@ -13,6 +14,14 @@ const props = defineProps({
   song: {
     type: Object,
     required: true
+  },
+  updateSong: {
+    type: Function,
+    required: true
+  },
+  index: {
+    type: Number,
+    required: true
   }
 })
 
@@ -21,8 +30,26 @@ const songSchema = {
   genre: 'alphaSpaces'
 }
 
-function edit() {
-  console.log('song Edited')
+async function edit(values) {
+  in_submission.value = true
+  show_alert.value = true
+  alert_variant.value = 'bg-blue-500'
+  alert_message.value = 'Please wait! Updating song info.'
+
+  try {
+    await songsCollection.doc(props.song.docID).update(values)
+  } catch (error) {
+    in_submission.value = false
+    alert_variant.value = 'bg-red-400'
+    alert_message.value = 'Something went wrong! Try again later'
+    return
+  }
+
+  props.updateSong(props.index, values)
+
+  in_submission.value = false
+  alert_variant.value = 'bg-green-500'
+  alert_message.value = 'Success!'
 }
 </script>
 <template>
@@ -40,10 +67,11 @@ function edit() {
       </button>
     </div>
     <div v-show="showForm">
+      <!-- Alert message -->
       <div
         class="text-white text-center font-bold p-4 mb-4 rounded"
         :class="alert_variant"
-        v-show="show_alert"
+        v-if="show_alert"
       >
         {{ alert_message }}
       </div>
@@ -69,10 +97,17 @@ function edit() {
           />
           <ErrorMessage class="text-red-600" name="genre" />
         </div>
-        <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">Submit</button>
+        <button
+          type="submit"
+          :disabled="in_submission"
+          class="py-1.5 px-3 rounded text-white bg-green-600"
+        >
+          Submit
+        </button>
         <button
           type="button"
           @click.prevent="showForm = false"
+          :disabled="in_submission"
           class="py-1.5 px-3 rounded text-white bg-gray-600"
         >
           Go Back

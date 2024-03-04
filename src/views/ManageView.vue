@@ -20,7 +20,10 @@ watchEffect(async () => {
   })
 })
 
-
+function updateSong(i, values) {
+  songs.value[i].modified_name = values.modified_name
+  songs.value[i].genre = values.genre
+}
 </script>
 
 <template>
@@ -37,7 +40,13 @@ watchEffect(async () => {
           </div>
           <div class="p-6">
             <!-- Composition Items -->
-            <CompositionItem :song="song" v-for="song in songs" :key="song.docID" />
+            <CompositionItem
+              :song="song"
+              v-for="(song, i) in songs"
+              :key="song.docID"
+              :updateSong="updateSong"
+              :index="i"
+            />
           </div>
         </div>
       </div>
