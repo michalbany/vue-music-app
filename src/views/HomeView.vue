@@ -1,13 +1,50 @@
 <script setup>
-import { ref, watchEffect } from 'vue';
-import { songsCollection } from '@/includes/firebase';
+import { ref, onBeforeUnmount, onMounted } from 'vue'
+import { songsCollection } from '@/includes/firebase'
 import SongItem from '@/components/SongItem.vue'
 
 const songs = ref([])
+const maxPerpage = 3
+const pendingRequest = ref(false)
 
+onMounted(async () => {
+  getSongs()
 
-watchEffect(async () => {
-  const snapshots = await songsCollection.get()
+  window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
+function handleScroll() {
+  const { scrollTop, offsetHeight } = document.documentElement
+  const { innerHeight } = window
+  const bottomOfWindow = Math.round(scrollTop) + innerHeight === offsetHeight
+
+  if (bottomOfWindow) {
+    getSongs()
+  }
+}
+
+// infinite loading
+async function getSongs() {
+  if (pendingRequest.value) {
+    return
+  }
+  pendingRequest.value = true
+  let snapshots
+
+  if (songs.value.length) {
+    const lastDoc = await songsCollection.doc(songs.value[songs.value.length - 1].docID).get()
+    snapshots = await songsCollection
+      .orderBy('modified_name')
+      .startAfter(lastDoc)
+      .limit(maxPerpage)
+      .get()
+  } else {
+    snapshots = await songsCollection.orderBy('modified_name').limit(maxPerpage).get()
+  }
 
   snapshots.forEach((document) => {
     songs.value.push({
@@ -15,8 +52,9 @@ watchEffect(async () => {
       docID: document.id
     })
   })
-})
 
+  pendingRequest.value = false
+}
 </script>
 
 <template>
@@ -53,7 +91,7 @@ watchEffect(async () => {
       </div>
       <!-- Playlist -->
       <ol id="playlist">
-        <SongItem v-for="song in songs" :key="song.docID" :song="song"/>
+        <SongItem v-for="song in songs" :key="song.docID" :song="song" />
       </ol>
       <!-- .. end Playlist -->
     </div>
