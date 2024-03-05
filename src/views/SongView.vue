@@ -1,12 +1,22 @@
 <script setup>
-import { songsCollection } from '@/includes/firebase'
+import { auth, songsCollection, commentsCollection } from '@/includes/firebase'
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user';
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
 
 const song = ref({})
+const schema = {
+  comment: 'required|min:3'
+}
+
+const comment_in_submission = ref(false)
+const comment_show_alert = ref(false)
+const comment_alert_variant = ref('bg-blue-500')
+const comment_alert_message = ref('')
 
 onMounted(async () => {
   const docSnapshot = await songsCollection.doc(route.params.id).get()
@@ -18,6 +28,29 @@ onMounted(async () => {
 
   song.value = docSnapshot.data()
 })
+
+async function addComment(values, { resetForm }) {
+  comment_in_submission.value = true
+  comment_show_alert.value = true
+  comment_alert_variant.value = 'bg-blue-500'
+  comment_alert_message.value = 'Please wait! Your comment is being submitted'
+
+  const comment = {
+    content: values.comment,
+    datePosted: new Date().toString(),
+    sid: route.params.id,
+    name: auth.currentUser.displayName,
+    uid: auth.currentUser.uid
+  }
+
+  await commentsCollection.add(comment)
+
+  comment_in_submission.value = false
+  comment_alert_variant.value = 'bg-green-500'
+  comment_alert_message.value = 'Comment added!'
+
+  resetForm()
+}
 </script>
 <template>
   <!-- Music Header -->
@@ -50,15 +83,29 @@ onMounted(async () => {
         <i class="fa fa-comments float-right text-green-400 text-2xl"></i>
       </div>
       <div class="p-6">
-        <form>
-          <textarea
+        <div
+          class="text-white text-center font-bold p-4 mb-4"
+          v-if="comment_show_alert"
+          :class="comment_alert_variant"
+        >
+          {{ comment_alert_message }}
+        </div>
+        <VeeForm :validation-schema="schema" @submit="addComment" v-if="userStore.userLoggedIn">
+          <VeeField
+            as="textarea"
+            name="comment"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded mb-4"
             placeholder="Your comment here..."
-          ></textarea>
-          <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 block">
+          ></VeeField>
+          <ErrorMessage class="text-red-600" name="comment" />
+          <button
+            type="submit"
+            class="py-1.5 px-3 rounded text-white bg-green-600 block"
+            :disabled="comment_in_submission"
+          >
             Submit
           </button>
-        </form>
+        </VeeForm>
         <!-- Sort Comments -->
         <select
           class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
