@@ -4,7 +4,7 @@ import { songsCollection } from '@/includes/firebase'
 import SongItem from '@/components/SongItem.vue'
 
 const songs = ref([])
-const maxPerpage = 3
+const maxPerpage = 10
 const pendingRequest = ref(false)
 
 onMounted(async () => {

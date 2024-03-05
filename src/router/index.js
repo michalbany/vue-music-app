@@ -33,6 +33,11 @@ const router = createRouter({
       redirect: { name: 'manage' }
     },
     {
+      name: 'song',
+      path: '/song/:id',
+      component: () => import('@/views/SongView.vue')
+    },
+    {
       path: '/:catchAll(.*)*', // path does not exist
       name: 'error404',
       component: Error404
