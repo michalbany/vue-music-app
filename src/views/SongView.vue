@@ -1,6 +1,6 @@
 <script setup>
 import { auth, songsCollection, commentsCollection } from '@/includes/firebase'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watchEffect, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
@@ -28,8 +28,19 @@ onMounted(async () => {
     return
   }
 
+  const { sortQuery } = route.query
+  sort.value = sortQuery === '1' || sortQuery === '2' ? sortQuery : '1'
+
   song.value = docSnapshot.data()
   getComments()
+})
+
+// watch for sort change
+watch(sort, (newVal) => {
+  if (newVal === route.query.sort) {
+    return
+  }
+  router.push({ query: { sortQuery: newVal } })
 })
 
 async function addComment(values, { resetForm }) {
