@@ -1,12 +1,14 @@
 <script setup>
 import { auth, songsCollection, commentsCollection } from '@/includes/firebase'
-import { computed, onMounted, ref, watchEffect, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { usePlayerStore } from '@/stores/player'
 
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
+const playerStore = usePlayerStore()
 
 const song = ref({})
 const comments = ref([])
@@ -98,8 +100,9 @@ const sortedComments = computed(() => {
     <div class="container mx-auto flex items-center">
       <!-- Play/Pause Button -->
       <button
+        @click.prevent="playerStore.newSong(song)"
         type="button"
-        class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none"
+        class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none cursor-pointer"
       >
         <i class="fas fa-play"></i>
       </button>
