@@ -1,17 +1,19 @@
 <script setup>
 import { auth, songsCollection, commentsCollection } from '@/includes/firebase'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user';
+import { useUserStore } from '@/stores/user'
 
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 
 const song = ref({})
+const comments = ref([])
 const schema = {
   comment: 'required|min:3'
 }
+const sort = ref('1')
 
 const comment_in_submission = ref(false)
 const comment_show_alert = ref(false)
@@ -27,6 +29,7 @@ onMounted(async () => {
   }
 
   song.value = docSnapshot.data()
+  getComments()
 })
 
 async function addComment(values, { resetForm }) {
@@ -44,6 +47,7 @@ async function addComment(values, { resetForm }) {
   }
 
   await commentsCollection.add(comment)
+  getComments()
 
   comment_in_submission.value = false
   comment_alert_variant.value = 'bg-green-500'
@@ -51,6 +55,27 @@ async function addComment(values, { resetForm }) {
 
   resetForm()
 }
+
+async function getComments() {
+  const snapshots = await commentsCollection.where('sid', '==', route.params.id).get()
+  comments.value = []
+
+  snapshots.forEach((doc) => [
+    comments.value.push({
+      docID: doc.id,
+      ...doc.data()
+    })
+  ])
+}
+
+const sortedComments = computed(() => {
+  return comments.value.slice().sort((a, b) => {
+    if (sort.value === '1') {
+      return new Date(b.datePosted) - new Date(a.datePosted)
+    }
+    return new Date(a.datePosted) - new Date(b.datePosted)
+  })
+})
 </script>
 <template>
   <!-- Music Header -->
@@ -79,7 +104,7 @@ async function addComment(values, { resetForm }) {
     <div class="bg-white rounded border border-gray-200 relative flex flex-col">
       <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
         <!-- Comment Count -->
-        <span class="card-title">Comments (15)</span>
+        <span class="card-title">Comments ({{ comments.length }})</span>
         <i class="fa fa-comments float-right text-green-400 text-2xl"></i>
       </div>
       <div class="p-6">
@@ -108,6 +133,7 @@ async function addComment(values, { resetForm }) {
         </VeeForm>
         <!-- Sort Comments -->
         <select
+          v-model="sort"
           class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
         >
           <option value="1">Latest</option>
@@ -118,76 +144,19 @@ async function addComment(values, { resetForm }) {
   </section>
   <!-- Comments -->
   <ul class="container mx-auto">
-    <li class="p-6 bg-gray-50 border border-gray-200">
+    <li
+      class="p-6 bg-gray-50 border border-gray-200"
+      v-for="comment in sortedComments"
+      :key="comment.docID"
+    >
       <!-- Comment Author -->
       <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
+        <div class="font-bold">{{ comment.name }}</div>
+        <time>{{ comment.datePosted }}</time>
       </div>
 
       <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
+        {{ comment.content }}
       </p>
     </li>
   </ul>
