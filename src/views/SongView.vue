@@ -116,7 +116,6 @@ const sortedComments = computed(() => {
         <!-- Song Info -->
         <div class="text-3xl font-bold">{{ song.modified_name }}</div>
         <div>{{ song.genre }}</div>
-        <div>{{ song.docID }}</div>
       </div>
     </div>
   </section>
