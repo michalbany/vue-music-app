@@ -18,10 +18,29 @@ watchEffect(() => {
 <template>
   <AppHeader />
 
-  <RouterView />
+  <RouterView v-slot="{ Component }">
+    <Transition name="fade" mode="out-in">
+      <component :is="Component"></component>
+    </Transition>
+  </RouterView>
 
   <!-- Player -->
   <AppPlayer />
 
   <AppAuth />
 </template>
+
+<style>
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: all .5s ease;
+}
+
+.fade-leave-to {
+  transition: all .5s ease;
+  opacity: 0;
+}
+</style>
