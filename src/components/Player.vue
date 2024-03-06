@@ -15,13 +15,20 @@ const playerStore = usePlayerStore()
       <button type="button" @click.prevent="playerStore.toggleAudio()">
         <i
           class="fa text-gray-500 text-xl"
-          :class="{ 'fa-play': !playerStore.playing, 'fa-pause': playerStore.playing }"
+          :class="{
+            'fa-play': !playerStore.playing,
+            'fa-pause': playerStore.playing,
+            'fa-stop': !Object.keys(playerStore.current_song).length
+          }"
         ></i>
       </button>
       <!-- Current Position -->
       <div class="player-currenttime">{{ playerStore.seek }}</div>
       <!-- Scrub Container  -->
-      <div class="w-full h-2 rounded bg-gray-200 relative cursor-pointer">
+      <div
+        @click.prevent="playerStore.updateSeek"
+        class="w-full h-2 rounded bg-gray-200 relative cursor-pointer"
+      >
         <!-- Player Ball -->
         <span
           class="absolute -top-2.5 -ml-2.5 text-gray-800 text-lg"

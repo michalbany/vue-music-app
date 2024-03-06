@@ -34,9 +34,23 @@ export const usePlayerStore = defineStore('player', {
       this.duration = helper.formatTime(this.sound.duration())
       this.playerProgress = `${(this.sound.seek() / this.sound.duration()) * 100}%`
 
-      if (this.sound.playing()) {
+      if (this.sound.playing) {
         requestAnimationFrame(this.progress)
       }
+    },
+    updateSeek(event) {
+      if (!this.sound.playing) {
+        return
+      }
+
+      const { x, width } = event.currentTarget.getBoundingClientRect()
+      const clickX = event.clientX - x
+      const percentage = clickX / width
+      const seconds = this.sound.duration() * percentage
+
+      this.sound.seek(seconds)
+      this.sound.once('seek', this.progress)
+
     },
     async toggleAudio() {
       // if Howl object exists

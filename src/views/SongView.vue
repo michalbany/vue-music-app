@@ -104,12 +104,19 @@ const sortedComments = computed(() => {
         type="button"
         class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none cursor-pointer"
       >
-        <i class="fas fa-play"></i>
+        <i
+          class="fas"
+          :class="{
+            'fa-play': !playerStore.playing || playerStore.current_song.docID !== song.docID,
+            'fa-pause': playerStore.playing
+          }"
+        ></i>
       </button>
       <div class="z-50 text-left ml-8">
         <!-- Song Info -->
         <div class="text-3xl font-bold">{{ song.modified_name }}</div>
         <div>{{ song.genre }}</div>
+        <div>{{ song.docID }}</div>
       </div>
     </div>
   </section>
