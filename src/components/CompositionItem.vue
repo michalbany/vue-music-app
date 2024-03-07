@@ -126,7 +126,7 @@ async function deleteSong() {
           :disabled="in_submission"
           class="py-1.5 px-3 rounded text-white bg-green-600"
         >
-          Submit
+          {{ $t('buttons.submit') }}
         </button>
         <button
           type="button"
@@ -134,7 +134,7 @@ async function deleteSong() {
           :disabled="in_submission"
           class="py-1.5 px-3 rounded text-white bg-gray-600"
         >
-          Go Back
+          {{ $t('buttons.back') }}
         </button>
       </VeeForm>
     </div>

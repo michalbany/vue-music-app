@@ -73,7 +73,6 @@ function upload($event) {
 
         props.addSong(songSnapshot)
 
-
         this.uploads[uploadIndex].variant = 'bg-green-400'
         this.uploads[uploadIndex].icon = 'fas fa-check'
         this.uploads[uploadIndex].text_class = 'text-green-400'
@@ -85,7 +84,7 @@ function upload($event) {
 <template>
   <div class="bg-white rounded border border-gray-200 relative flex flex-col">
     <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
-      <span class="card-title">Upload</span>
+      <span class="card-title">{{ $t('manage.upload') }}</span>
       <i class="fas fa-upload float-right text-green-400 text-2xl"></i>
     </div>
     <div class="p-6">
@@ -101,7 +100,7 @@ function upload($event) {
         @dragleave.prevent.stop="is_dragover = false"
         @drop.prevent.stop="upload($event)"
       >
-        <h5>Drop your files here</h5>
+        <h5>{{ $t('manage.drop') }}</h5>
       </div>
       <input type="file" multiple @change="upload($event)" class="" />
       <hr class="my-6" />

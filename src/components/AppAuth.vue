@@ -30,7 +30,7 @@ const tab = ref('login')
         <div class="py-4 text-left px-6">
           <!--Title-->
           <div class="flex justify-between items-center pb-4">
-            <p class="text-2xl font-bold">Your Account</p>
+            <p class="text-2xl font-bold">{{$t("register.your_acc")}}</p>
             <!-- Modal Close Button -->
             <div @click="modalStore.isOpen = false" class="modal-close cursor-pointer z-50">
               <i class="fas fa-times"></i>
@@ -48,7 +48,7 @@ const tab = ref('login')
                 }"
                 href="#"
                 @click.prevent="tab = 'login'"
-                >Login</a
+                >{{$t("register.login")}}</a
               >
             </li>
             <li class="flex-auto text-center">
@@ -60,7 +60,7 @@ const tab = ref('login')
                   'hover:text-blue-600': tab === 'login'
                 }"
                 @click.prevent="tab = 'register'"
-                >Register</a
+                >{{$t("register.register")}}</a
               >
             </li>
           </ul>

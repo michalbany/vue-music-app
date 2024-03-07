@@ -1,5 +1,38 @@
 {
   "home": {
-    "listen": "Poslouchejte skvělou hudbu!"
+    "listen": "Poslouchej skvělou hudbu!"
+  },
+  "navigation": {
+    "home": "Úvod",
+    "about": "Více",
+    "logout": "Odhlásit",
+    "singin": "Přihlásit/Registrovat",
+    "manage": "Spravovat"
+  },
+  "song": {
+    "comment_count": "Žádné komentáře | 1 komentář | {count} komentářů",
+    "songs": "Skladby"
+  },
+  "register": {
+    "accept": "Souhlasím se {0}",
+    "tos": "Smluvními podmínky",
+    "your_acc": "Tvůj účet",
+    "login": "Přihlásit",
+    "register": "Registrovat",
+    "name": "Jméno",
+    "email": "Email",
+    "age": "Věk",
+    "password": "Heslo",
+    "conf_password": "Potvrdit Heslo",
+    "country": "Země"
+  },
+  "manage": {
+    "my_songs": "Moje Skladby",
+    "upload": "Nahrát",
+    "drop": "Přetáhni soubor sem"
+  },
+  "buttons": {
+    "submit": "Potvrdit",
+    "back": "Zpět"
   }
 }

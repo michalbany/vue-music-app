@@ -1,21 +1,21 @@
 <script setup>
 import { useModalStore } from '@/stores/modal'
 import { useUserStore } from '@/stores/user'
-import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 // Použití Pinia store
 const modalStore = useModalStore()
 const userStore = useUserStore()
 
-const { locale } = useI18n(); // for language change
+const { locale } = useI18n() // for language change
 
 const route = useRoute()
 const router = useRouter()
 
 const currentLocale = computed(() => {
-  return locale.value === "cs" ? "Čeština" : "English"
+  return locale.value === 'cs' ? 'Čeština' : 'English'
 })
 
 // Metoda pro přepínání stavu modalu
@@ -23,16 +23,16 @@ function toggleAuthModal() {
   modalStore.isOpen = !modalStore.isOpen
 }
 
-function signout(){
+function signout() {
   userStore.signout()
 
   if (route.meta.requiresAuth) {
-    router.push({ name: "home" })
+    router.push({ name: 'home' })
   }
 }
 
 function changeLocale() {
-  locale.value = locale.value === "cs" ? "en" : "cs"
+  locale.value = locale.value === 'cs' ? 'en' : 'cs'
 }
 </script>
 
@@ -53,19 +53,25 @@ function changeLocale() {
         <ul class="flex flex-row mt-1">
           <!-- Navigation Links -->
           <li>
-            <RouterLink class="px-2 text-white" :to="{ name: 'about' }">About</RouterLink>
+            <RouterLink class="px-2 text-white" :to="{ name: 'about' }">{{
+              $t('navigation.about')
+            }}</RouterLink>
           </li>
           <li v-if="!userStore.userLoggedIn">
-            <a class="px-2 text-white" href="#" @click.prevent="toggleAuthModal"
-              >Login / Register</a
-            >
+            <a class="px-2 text-white" href="#" @click.prevent="toggleAuthModal">{{
+              $t('navigation.singin')
+            }}</a>
           </li>
           <template v-else>
             <li>
-              <RouterLink class="px-2 text-white" :to="{ name: 'manage' }">Manage</RouterLink>
+              <RouterLink class="px-2 text-white" :to="{ name: 'manage' }">{{
+                $t('navigation.manage')
+              }}</RouterLink>
             </li>
             <li>
-              <a class="px-2 text-white" href="#" @click.prevent="signout">logout</a>
+              <a class="px-2 text-white" href="#" @click.prevent="signout">{{
+                $t('navigation.logout')
+              }}</a>
             </li>
           </template>
         </ul>
