@@ -24,7 +24,7 @@ export default defineConfig({
             type: "image/png"
           }
         ]
-      }
+      },
     }),
   ],
   resolve: {
