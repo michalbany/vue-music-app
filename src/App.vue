@@ -36,11 +36,11 @@ watchEffect(() => {
 }
 
 .fade-enter-active {
-  transition: all .5s ease;
+  transition: all .2s ease;
 }
 
 .fade-leave-to {
-  transition: all .5s ease;
+  transition: all .2s ease;
   opacity: 0;
 }
 </style>
