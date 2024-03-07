@@ -5,6 +5,7 @@ import cs from '@/locales/cs.json'
 export default createI18n({
   locale: 'en',
   fallbackLocale: 'en',
+  legacy: false,
   messages: {
     en,
     cs

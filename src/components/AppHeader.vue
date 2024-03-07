@@ -2,13 +2,21 @@
 import { useModalStore } from '@/stores/modal'
 import { useUserStore } from '@/stores/user'
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
 
 // Použití Pinia store
 const modalStore = useModalStore()
 const userStore = useUserStore()
 
+const { locale } = useI18n(); // for language change
+
 const route = useRoute()
 const router = useRouter()
+
+const currentLocale = computed(() => {
+  return locale.value === "cs" ? "Čeština" : "English"
+})
 
 // Metoda pro přepínání stavu modalu
 function toggleAuthModal() {
@@ -21,6 +29,10 @@ function signout(){
   if (route.meta.requiresAuth) {
     router.push({ name: "home" })
   }
+}
+
+function changeLocale() {
+  locale.value = locale.value === "cs" ? "en" : "cs"
 }
 </script>
 
@@ -56,6 +68,13 @@ function signout(){
               <a class="px-2 text-white" href="#" @click.prevent="signout">logout</a>
             </li>
           </template>
+        </ul>
+        <ul class="ml-auto">
+          <li>
+            <a class="px-2 text-white" href="#" @click.prevent="changeLocale">
+              {{ currentLocale }}
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
